@@ -1,0 +1,16 @@
+b60a7f63c10f3a738716a69196765f02 *DESCRIPTION
+9b1a83a2e8613727415cbafcdc954221 *NAMESPACE
+4c8139fc061e9dc1bab80a4d67c8cc06 *R/FindLambda.MA.R
+4069cad6c36db34326dff9296f84701d *R/FindZ.MA.R
+d93527f41e21b5c414dbd51b9fe639d9 *R/Pvero_ratio.R
+3e351d77ff6f6d7ebcffe0253ea130d7 *R/RazonVero.R
+620465d60c0127f056ad338b0977e392 *R/prop.RR.R
+bc2c4a0b8cb22f09523a29c11ec84090 *R/prop.comb.R
+db904d869c6bee6c7d18bbf4044b51e8 *R/score.MA.R
+cb17b77c4c8b7db5b03de54b0f1cadc4 *R/summary.prop.RR.R
+08dc7814505b1872623a7c64f9c66fe4 *R/summary.prop.comb.R
+b8549bc124d139b4b15f94456a8c6741 *man/prop.RR.Rd
+1cfa6fea112f7d7949acf989ac97c451 *man/prop.comb.RR-package.Rd
+e0ff710b3eb80a8401047e82ad61fcc8 *man/prop.comb.Rd
+3cba294af303afb6a396e9d6b07630ae *man/summary.prop.RR.Rd
+57c21a7dea04f47e5241ecb699318dc4 *man/summary.prop.comb.Rd

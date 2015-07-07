@@ -1,0 +1,5 @@
+import(rootSolve, stats)
+export(prop.RR, prop.comb, summary.prop.RR, summary.prop.comb)
+S3method(summary, prop.comb)
+
+S3method(summary, prop.RR)
