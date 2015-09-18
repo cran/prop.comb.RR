@@ -31,9 +31,9 @@ Returns a list with the following components:
 \references{
 Woolf, B. (1955). "On estimating the realtion between blood group disease." Annals  of Human Genetics 19, 25-352.
 
-Martin Andres, A. & Alvarez Hernandez, M. (2014). "Two-tailed approximate  confidence intervals for the ratio of proportions." Statistics and Computing 24, 65  - 75.  
+Martin, A. & Alvarez, M. (2014). "Two-tailed approximate  confidence intervals for the ratio of proportions." Statistics and Computing 24, 65  - 75.  
 
-Alvarez Hernandez, M. &  Martin Andress, A. (2015). "New asymptotic inferences  about the difference, ratio and linear combination of two independent proportions."  Communications in Statistics - Simulation and Computation (in press).
+Alvarez, M. &  Martin, A. (2015). "New asymptotic inferences  about the difference, ratio and linear combination of two independent proportions."  Communications in Statistics - Simulation and Computation (in press).
 }
 
 \author{Maria Alvarez Hernandez and Javier Roca Pardinas}

@@ -61,7 +61,7 @@ Martin, A. & Alvarez, M. (2014). "Two-tailed asymptotic inferences for a proport
 
 Yu, W.; Guo, X. & Xu, W. (2014). "An improved score interval with a modified midpoint for a binomial proportion." Journal of Statistical Computation and Simulation, 84, 1022 - 1038
 
-Alvarez Hernandez, M. & Martin Andres, A. (2015). "New asymptotic inferences about the difference, ratio and linear combination of two independent proportions." Communications in Statistics - Simulation and Computation (in press).
+Alvarez, M. & Martin, A. (2015). "New asymptotic inferences about the difference, ratio and linear combination of two independent proportions." Communications in Statistics - Simulation and Computation (in press).
 
 }
 
@@ -92,6 +92,14 @@ prop.comb(x=c(83,69), n=c(88,76), alternative="two.sided", conf.level=0.95)
 # (Bloch, 1997) and use a data set by Hanley and McNeil (1983). 
 
 prop.comb(x=c(44, 3), n=c(54, 58), a=c(-0.4, 0.6), 
+alternative="two.sided", conf.level=0.95)
+
+# Tebbs and Roths (2008) refer to data about a multicenter clinical trial whose
+# aim was to evaluate the efficacy of a lowered salt regim in the treatment of male 
+# infants with acute diarrhea. The objetive it to obtain a confidence interval about 
+# the proportion of fever cases in South American area. 
+
+prop.comb(x=c(32, 34), n=c(107, 92), a=c(107/199, 92/199), 
 alternative="two.sided", conf.level=0.95)
 
 

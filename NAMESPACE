@@ -3,3 +3,8 @@ export(prop.RR, prop.comb, summary.prop.RR, summary.prop.comb)
 S3method(summary, prop.comb)
 
 S3method(summary, prop.RR)
+
+S3method(print, prop.comb)
+
+S3method(print, prop.RR)
+
