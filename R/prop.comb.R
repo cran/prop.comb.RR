@@ -1,11 +1,12 @@
 prop.comb <-
 function(x,n,p=NULL,a=NULL,alternative = c("two.sided", "less", 
-    "greater"), conf.level = 0.95)
+    "greater"), conf.level = 0.95, coverage=FALSE, nrep=1000)
 
 {
 
 
-
+noa=missing(a)
+a0=a
 
 # -------------------------------------------
 if (length(x) != length(n)) 
@@ -36,16 +37,17 @@ if (!missing(a)) {if (length(a) != length(n))
 
 #---------------------------------------------
 
-
-
-
-
-############################
-############################
+########################################
 # AUXILIAR FUNCTIONS
+########################################
+
+
+#### One proportion:  test1.MA + ic1.MA
+#####################
+
 
 test1.MA=function(x,n,p0=0.5,e=5,alternative = c("two.sided", "less", "greater")) {
-# Caso de una proporcion y Test
+
 c=1.0/(2.0*n) ; pp=x/n 
 
 dif=pp-p0; part1= dif*dif*n
@@ -81,7 +83,7 @@ z[4]=sqrt(zw2);pvalue[4]=p_zw2 # Adjusted Wald
 
 result=cbind(z,pvalue)
 rownames(result)=c("Score (without cc)","Score (with cc)",
-"Adjusted Arc Sine", "Adjusted Wald"     )
+"Adjusted Arc Sine", "Adjusted Wald")
 colnames(result)=c("z value", "p-value")
 result} 
 
@@ -135,7 +137,7 @@ result[5,]=c(l1y0,l2y0)
 
 
 rownames(result)=c("Score (without cc)","Score (with cc)",
-"Adjusted Arc Sine", "Adjusted Wald"    , "Modified Score"  )
+"Adjusted Arc Sine", "Adjusted Wald", "Modified Score"  )
 colnames(result)=c("lower limit", "upper limit")
 result
 }
@@ -153,14 +155,17 @@ B[,2]=switch(alternative,two.sided = B[,2],less = B[,2],greater=1)
 
 A=rbind(A,c(NA,NA))
 result=cbind(B,A)
-C=binom.test(x,n,p=p0,alternative=alternative)
-C=c(as.numeric(C$conf.int),NA,C$p.value)
+# C=binom.test(x,n,p=p0,alternative=alternative)
+# C=c(as.numeric(C$conf.int),NA,C$p.value)
 
-result=rbind(result,C)
-rownames(result)[6]="Exact binomial test"
+# result=rbind(result,C)
+# rownames(result)[6]="Exact binomial test"
 list(estimate=x/n,inference=result,alternative=alternative,p0=p0)}
 
+#############################################
 # ESTATISTIC BASED ON ARCSINE TRANSFORMATION
+#############################################
+
 As=function(delta,x2,n2,a,fact1,e1) {
 p_vero1=Pvero_dif(delta=delta*sign(a[2]),x=x2,n=n2)
 p_vero2=p_vero1 +delta/sign(a[2])
@@ -177,16 +182,17 @@ b1=sqrt(p_vero1); b2=sqrt(p_vero2)
 b3=sqrt(x[1]/n2[1]); b4=sqrt(x[2]/n2[2])
 qnorm(e1)^2-4.0*(n2[1]*(asin(b1)-asin(b3))^2+n2[2]*(asin(b2)-asin(b4))^2)}
 
+##############################################
 
 
-
+#### Difference of proportions:  test2.MA + ic2.MA
+###############################
 
 ic2.MA=function(x,n,e=5,a=c(-1,1)) { 
 e1=1.0-0.5*(e/100.0)
 Z=qnorm(e1)^2
 aux=FindLambda.MA(x,n,Z=Z,a=a); l1ze0=aux[1]; l2ze0=aux[2]
 aux=FindLambda.MA(x,n,Z=Z,a=a,correct=T); l1ze0c=aux[1]; l2ze0c=aux[2]
-
 
 pp=x/n
 
@@ -209,27 +215,26 @@ xx=x+0.5; nn=n+1; b=sqrt(xx/nn)
 fact1=asin(b[2])-asin(b[1])
 
 valor=abs(a[2])
-aux=uniroot.all(As, c(-1, 1),x=xx,n2=nn,a=a,fact1=fact1,e1=e1)
 
-
+aux=uniroot.all(As, c(-1, 1),x=xx,n2=nn,a=a,fact1=fact1,e1=e1,maxiter = 2000, n = 5000)
 lim_inf1=min(aux)*valor; lim_sup1=max(aux)*valor
 
-aux=uniroot.all(AM, c(-1, 1),x=xx,n2=nn,a=a,e1=e1)
+aux=uniroot.all(AM, c(-1, 1),x=xx,n2=nn,a=a,e1=e1, maxiter = 2000, n = 5000)
 lim_inf2=min(aux)*valor; lim_sup2=max(aux)*valor
 
-xx=x+Z^2/4; nn=n+Z^2/2
+# xx=x+Z^2/4; nn=n+Z^2/2
 
-aux=FindLambda.MA(x=xx,n=nn,Z=Z^2,correct=F,a);
-lim_inf3=min(aux)*valor; lim_sup3=max(aux)*valor
+# aux=FindLambda.MA(x=xx,n=nn,Z=Z^2,correct=F,a);
+# lim_inf3=min(aux)*valor; lim_sup3=max(aux)*valor
 
-aux=FindLambda.MA(x=xx,n=nn,Z=Z^2,correct=T,a);
-lim_inf4=min(aux)*valor; lim_sup4=max(aux)*valor
+# aux=FindLambda.MA(x=xx,n=nn,Z=Z^2,correct=T,a);
+# lim_inf4=min(aux)*valor; lim_sup4=max(aux)*valor
 
-l1ze3=lim_inf3;l2ze3=lim_sup3;
-l1ze3c=lim_inf4;l2ze3c=lim_sup4;
+# l1ze3=lim_inf3;l2ze3=lim_sup3;
+# l1ze3c=lim_inf4;l2ze3c=lim_sup4;
 
-l1ze3=max(-1.0,l1ze3);l2ze3=min(1.0,l2ze3)
-l1ze3c=max(-1.0,l1ze3c);l2ze3c=min(1.0,l2ze3c)
+# l1ze3=max(-1.0,l1ze3);l2ze3=min(1.0,l2ze3)
+# l1ze3c=max(-1.0,l1ze3c);l2ze3c=min(1.0,l2ze3c)
 
 l1ae1=lim_inf1;l2ae1=lim_sup1;
 l1aem1=lim_inf2;l2aem1=lim_sup2;
@@ -240,12 +245,17 @@ l1ae1=max(-1.0,l1ae1);l2ae1=min(1.0,l2ae1)
 l1aem1=max(-1.0,l1aem1);l2aem1=min(1.0,l2aem1)
 l1zw4=max(-1.0,l1zw4);l2zw4=min(1.0,l2zw4)
 
-result=cbind(c(l1ze0,l1ze0c,l1ze3,l1ze3c,l1zw4,l1ae1,l1aem1),
-c(l2ze0,l2ze0c,l2ze3,l2ze3c,l2zw4,l2ae1,l2aem1))
+result=cbind(
+ c(l1ze0,l1ze0c,l1zw4,l1ae1,l1aem1),
+ c(l2ze0,l2ze0c,l2zw4,l2ae1,l2aem1))
+#l1ze3,l1ze3c,
+#l2ze3,l2ze3c,
 
-rownames(result)=c("Score (without cc)","Score (with cc)","Adjusted Score (without cc)", 
-"Adjusted Score (with cc)","Adjusted Wald","Adjusted Arc Sine","Adjusted-M Arc Sine"  )
+rownames(result)=c("Score (without cc)","Score (with cc)","Adjusted Wald","Adjusted Arc Sine","Adjusted-M Arc Sine")
 colnames(result)=c("lower limit", "upper limit")
+
+# "Adjusted Score (without cc)", "Adjusted Score (with cc)",
+
 result}
 
 
@@ -267,7 +277,7 @@ pp=Pvero_dif(delta=lambda/a[2],x=xx,n=nn); qq=1-pp
 fact1=a[1]^2*pp*qq/nn[1]+a[2]^2*(pp+lambda)*(1-pp-lambda)/nn[2]; fact2=nn[1]*nn[2]+nn[1]+nn[2];
 if (nn[1]==nn[2]) {c=2.0/fact2} else {c=1.0/fact2}
 
-ze3=sqrt((d-lambda)^2/fact1) #para cualquier valor de lambda (no especificamente 0)
+ze3=sqrt((d-lambda)^2/fact1) # any value of lambda (not only 0)
 
 if (d-lambda>0) {dc=d-lambda} else {dc=-d+lambda}
 if (dc>c) {e3c=(dc-c)^2/fact1} else {e3c=0.0}
@@ -297,9 +307,12 @@ zw4=(a%*%pp -lambda)/sqrt(fact)
 xx=x+0.5; nn=n+1; b=sqrt(xx/nn)
 fact1=asin(b[2])-asin(b[1])
 
-aux=uniroot.all(AM, c(-1, 1),x=xx,n2=nn,a=a,e1=e1)
+# aux=uniroot.all(AM, c(-1, 1),x=xx,n2=nn,a=a,e1=e1,maxiter = 2000, n = 5000)
+# no necesary
+
 p_vero1=Pvero_dif(delta=lambda/a[2],x=xx,n=nn)
 p_vero2=p_vero1+lambda/a[2]
+
 if(p_vero2<0.0) p_vero2=0.0; if(p_vero2>1.0) p_vero2=1.0
 
 b=c(b,sqrt(p_vero1),sqrt(p_vero2))
@@ -311,8 +324,11 @@ ae1m=4.0*(nn[1]* ( asin(b[1]) - asin(b[3]) )^2 + nn[2]* (asin(b[2]) - asin(b[4])
 cc3=sqrt(ae1);cc5=sqrt(ae1m);cc4=zw4;
 
 
-zs=c(ze0,ze0c,ze3,ze3c,cc4,cc3,cc5);zs=abs(zs)
-pvalue=numeric(7)
+zs=c( ze0, ze0c, cc4, cc3, cc5);zs=abs(zs)
+
+# ze3,ze3c,
+
+pvalue=numeric(5)
 
 if(a%*%(x/n)<lambda){zs=(-zs)} # eran todos positivos
 
@@ -320,9 +336,13 @@ if(a%*%(x/n)<lambda){zs=(-zs)} # eran todos positivos
 pvalue=switch(alternative,two.sided =  2.0*pnorm(-abs(zs)),less = pnorm(zs),greater = 1-pnorm(zs))
 
 result=cbind(zs,pvalue)
-rownames(result)=c("Score (without cc)","Score (with cc)","Adjusted Score (without cc)", 
-"Adjusted Score (with cc)","Adjusted Wald","Adjusted Arc Sine", "Adjusted-M Arc Sine")
+
+
+rownames(result)=c("Score (without cc)","Score (with cc)","Adjusted Wald","Adjusted Arc Sine", "Adjusted-M Arc Sine")
 colnames(result)=c("z value", "p-value")
+
+# "Adjusted Score (without cc)", "Adjusted Score (with cc)",
+
 result} 
 
 
@@ -344,7 +364,8 @@ result=cbind(B,A)
 list(estimate=x/n,a=a,difference=as.numeric(a%*%(x/n)),inference=result,alternative=alternative,lambda=lambda)
 }
 
-
+#### Combination of two proportions:  testComb2.MA + icComb2.MA
+###############################
 
 testComb2.MA=function(x,n,a,lambda=0,e=5,
 alternative = c("two.sided", "less", "greater")) {
@@ -380,10 +401,10 @@ factd=sum(a^2*pd*(1-pd)/nnn)
 zw4=dd^2/factd
 
 
-# caso de LR1*/
+# case LR1*/
 xm=x+0.5; nm=n+1;pm=xm/nm
 
-#Calcular la p_verosimilitud con los datos incrementados*/
+#Calculation of p_verosimilitud with increase data*/
 
 ad1=sum(xm)
 alpha=lambda/a[2];bet=-a[1]/a[2]
@@ -392,7 +413,7 @@ c1=bet*ad1-nm[1]*alpha*(1.0-alpha)-alpha*bet*(nm[2]+2.0*xm[1])
 c2=bet*(alpha*(nm[2]+2*nm[1])-(nm[1]+xm[2])-bet*(nm[2]+xm[1]))
 c3=bet*bet*(nm[1]+nm[2])
 
-A=-4.5*c3*(c1*c2-3.0*c0*c3)+c2*c2*c2  #        /*Recordar que -A*/
+A=-4.5*c3*(c1*c2-3.0*c0*c3)+c2*c2*c2  
 B=c2*c2-3.0*c1*c3
 
 if (A>=0)  {u=sqrt(B)} else {u=-sqrt(B)}
@@ -401,7 +422,6 @@ w1= A/(u^3); if (w1>1.0) w1=1.0; if (w1<(-1.0)) w1=-1.0
 fhi=(pi+ acos(w1))/3
 pvm1=(-1*c2+2*cos(fhi)*u)/(3*c3) ;if (pvm1>1) pvm1=1; if (pvm1<0) pvm1=0
 pvm2=alpha+bet*pvm1;if (pvm2>1) pvm2=1;if (pvm2<0) pvm2=0; 
-
 
 
 gk1=log(pvm1/pm[1]);gk2=log((1-pvm1)/(1-pm[1]));gk3=log(pvm2/pm[2]);gk4=log((1-pvm2)/(1-pm[2]));
@@ -419,8 +439,6 @@ rownames(result)=c("Score (without cc)","Score (with cc)",
 colnames(result)=c("z value", "p-value")
 result
 }
-
-
 
 
 
@@ -458,7 +476,7 @@ lzw4=c(Ldi-Z*sqrt(factdi),Lds+Z*sqrt(factds))
 
 # /*caso de LR1*/
 xm=x+0.5;nm=n+1;pm=xm/nm
-llr=uniroot.all(RazonVero, limites,x=xm,n2=nm,a=a,Z=Z)
+llr=uniroot.all(RazonVero, limites,x=xm,n2=nm,a=a,Z=Z,maxiter = 2000, n = 5000)
 
 
 result=rbind(lze0,lze0c,lzw2,lzw4,llr)
@@ -489,6 +507,12 @@ result=cbind(B,A)
 
 list(estimate=x/n,a=a,L=as.numeric(a%*%(x/n)),inference=result,alternative=alternative,lambda=lambda)
 }
+
+
+
+#### Combination of many proportions:  testCombi.MA + icCombi.MA
+###############################
+
 
 testCombi.MA=function(x,n,a,lambda=0,e=5,
 alternative = c("two.sided", "less", "greater")) {
@@ -527,8 +551,6 @@ result=cbind(z,pvalue)
 rownames(result)=c("Score (without cc)","Score (with cc)",
 "Adjusted Wald", "Peskun "); colnames(result)=c("z value", "p-value")
 result}
-
-
 
 
 
@@ -595,6 +617,9 @@ list(estimate=x/n,a=a,L=as.numeric(a%*%(x/n)),inference=result,alternative=alter
 lambda=lambda)
 }
 
+
+###########################
+
 Pvero_dif=function(delta,x,n){
 	a1=sum(x); a=sum(n)
 	b=-(a+a1-(a+n[1])*delta)
@@ -614,17 +639,12 @@ Pvero_dif=function(delta,x,n){
 	pvero[pvero>1.0]=1.0; pvero[pvero<0.0]=0 
 	pvero}
 
-
-
-
-
-###########################
 ###########################
 
 # END OF AUXILIAR FUNCTIONS
 
 ############################
-############################
+
 
 
 OK=complete.cases(x, n); x=x[OK]; n=n[OK]
@@ -644,10 +664,10 @@ else if (p<=0 | p>=1) stop("value of 'p' must be in (0,1)")
 
 resultado=prop.test.MA(x,n,p0=p,conf.level,alternative)
 
-# Recomendation ____
+# Recommendation ____
 
 if (conf.level==0.90 & sum(n)>=100) {recomen="Adjusted Arc Sine"}
-else if (conf.level!=0.90 & sum(n)<=80) {recomen="Score (with cc)"}
+else if (conf.level!=0.90 & sum(n)<=80) {recomen="Modified Score"}
 else {recomen= "Adjusted Wald"} }
 
 
@@ -666,17 +686,21 @@ else if(k==2 & missing(a)) {
   resultado=prop.test2.MA(x=x,n=n,lambda=p,conf.level,alternative)
   a=resultado$a
   
+
+
 # Recommendation ____
 
-if (p==0) {
-if (conf.level==0.90) recomen="Adjusted Score (without cc)"
-if (conf.level!=0.90 & n[1]==n[2]) recomen="Adjusted Score (with cc)"
-if (conf.level!=0.90 & n[1]!=n[2]) recomen="Score (with cc)"}
-else {
+#if (p==0) {
+# if (conf.level==0.90) recomen="Adjusted Score (without cc)"
+# if (conf.level!=0.90 & n[1]==n[2]) recomen="Adjusted Score (with cc)"
+#if (conf.level!=0.90 & n[1]!=n[2]) recomen="Score (with cc)"
+#else recomen="No recommendation" }
+#else {
 if (conf.level==0.99) recomen="Adjusted-M Arc Sine"
 if (conf.level!=0.99 & sum(n)>=200 & n[1]==n[2]) recomen="Adjusted Wald"
 if (conf.level!=0.99 & (sum(n)<200 | n[1]!=n[2])) recomen="Adjusted Arc Sine"
-}}
+#}
+}
 
 
 
@@ -698,12 +722,11 @@ stop("value of 'p' must be in (a_neg,a_pos)")
 
   resultado=prop.Comb2.MA(x=x,n=n,a=a,lambda=p,conf.level,alternative)
  
-# Recomendation ____
+# Recommendation ____
 
 if (conf.level!=0.90 &  n[1]<60 & n[2]<60) recomen="Adjusted Wald(a)"
 if (conf.level!=0.99) recomen="Adjusted Wald(b)"
 if (conf.level==0.99) recomen="Adjusted Likelihood Ratio"
-
  }
 
 
@@ -738,14 +761,28 @@ else if ( max(n)<=10) recomen="Adjusted Wald"
 }
 
 
-if (conf.level!=0.90 & conf.level!=0.95 &conf.level!=0.99) {recomen=""}
-
-if (recomen=="") recomen="No recommendation"
+if (conf.level!=0.90 & conf.level!=0.95 &conf.level!=0.99) {recomen="No recommendation"}
+#if (recomen=="") recomen="No recommendation"
 
 
 resultado$k=k; resultado$x=x; resultado$n=n;
 resultado$a=a; resultado$p=p; resultado$conf.level=conf.level;
-resultado$recomendation=recomen
+resultado$recommendation=recomen
+
+#####################################################
+
+# noa=missing(a)
+# a0=a
+
+if (coverage) 
+{
+
+if (noa) {resultado=coveragecomb(resultado,nrep)}
+else {resultado=coveragecomb(resultado,nrep,a=a0)} 
+
+}
+
+
 object=resultado
 class(object) ="prop.comb"
 object

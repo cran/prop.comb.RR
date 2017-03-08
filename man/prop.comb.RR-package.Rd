@@ -36,5 +36,5 @@ Maintainer: Maria Alvarez Hernandez \email{maria.alvarez@uvigo.es}
 % ~~ \code{\link[<pkg>:<pkg>-package]{<pkg>}} ~~
 % }
 % \examples{
-% # poner ejemplos
+% # put examples
 %}

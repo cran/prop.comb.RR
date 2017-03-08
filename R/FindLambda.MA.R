@@ -9,7 +9,7 @@ ls=ls-0.001*(ls-li)
 if (li==ls) {li=li-0.0001; ls=ls+0.0001} 
 
 if (score.MA(x,n,Z,correct=FALSE,a=a,lambda=(li+ls)/2)==0) {raiz1=(li+ls)/2}
-else { raiz1=uniroot(score.MA,c(li,ls),x=x,n=n,Z=Z,correct=correct,a=a)$root}
+else { raiz1=uniroot(score.MA,c(li,ls),x=x,n=n,Z=Z,correct=correct,a=a,extendInt="yes")$root}
 
 #if (plot){ par(mfcol=c(1,2))
 #xgrid=seq(li,ls,length=100);fgrid=xgrid
@@ -21,11 +21,10 @@ else { raiz1=uniroot(score.MA,c(li,ls),x=x,n=n,Z=Z,correct=correct,a=a)$root}
 li=a%*%p; ls=sum(a[a>0]); if (correct==TRUE){li=li+cpc}
 
 li=li+0.001*(ls-li) 
-
 if (li==ls) {li=li-0.0001; ls=ls+0.0001}  
 
 if (score.MA(x,n,Z,correct=FALSE,a=a,lambda=(li+ls)/2)==0) {raiz2=(li+ls)/2}
-else {raiz2=uniroot(score.MA,c(li,ls),x=x,n=n,Z=Z,correct=correct,a=a)$root }
+else {raiz2=uniroot(score.MA,c(li,ls),x=x,n=n,Z=Z,correct=correct,a=a,extendInt="yes")$root }
 
 #if (plot){ xgrid=seq(li,ls,length=100);fgrid=xgrid
 #for (i in 1:100) fgrid[i]=score.MA(x,n,Z=Z,correct,a,lambda=xgrid[i])

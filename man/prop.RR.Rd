@@ -3,22 +3,23 @@
 %- Also NEED an '\alias' for EACH other topic documented here.
 \title{prop.RR}
 \description{Main function for making inferences (confidence intervals and tests) about the relative risk using optimal methods from the literature and score method.}
-\usage{
-prop.RR(x, n, rho = NULL, alternative = c("two.sided", "less", "greater"),
- conf.level = 0.95)
-}
+\usage{prop.RR(x, n, rho = NULL, alternative = c("two.sided", "less", "greater"), 
+conf.level = 0.95, coverage = FALSE, nrep = 1000)}
+
 \arguments{
   \item{x}{a vector of counts of successes.}
   \item{n}{a vector of counts of samples sizes.}
   \item{rho}{hypothesized true value of the relative risk.}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less".}
   \item{conf.level}{confidence level of the returned confidence interval.}
+ \item{coverage}{coverage probability of the confidence interval.}
+  \item{nrep}{number of replays to calculate the estimated coverage probabilities} 
 }
 \value{
 Returns a list with the following components:
 \item{estimate }{a vector with the sample proportions x/n.}
 \item{RR }{estimated relative risk.}
-\item{inference }{confidence intervals (lower limit, upper limit) and p-values of the test (with z-values of statistics.}
+\item{inference }{confidence intervals (lower limit, upper limit) and p-values of the test (with z-values of statistics. The coverage probabilities are included when the user requests them.}
 \item{alternative }{a character string describing the alternative hypothesis.}
 \item{rho }{hypothesized true value of the relative risk.}
 \item{x }{number of successes.}

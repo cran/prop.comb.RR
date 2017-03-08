@@ -2,8 +2,8 @@
 \alias{prop.comb}
 \title{prop.comb}
 \description{Main function for making inferences (confidence intervals and tests) about a linear combination of proportions using optimal methods from the literature and score method.}
-\usage{prop.comb(x, n, p = NULL, a = NULL, 
-alternative = c("two.sided", "less", "greater"), conf.level = 0.95)}
+\usage{prop.comb(x, n, p = NULL, a = NULL, alternative = c("two.sided", "less", "greater"),
+ conf.level = 0.95, coverage = FALSE, nrep = 1000)}
 
 \arguments{
   \item{x}{a vector of counts of successes.}
@@ -12,6 +12,8 @@ alternative = c("two.sided", "less", "greater"), conf.level = 0.95)}
   \item{a}{coefficients of the linear combination of proportions.}
   \item{alternative}{a character string specifying the alternative hypothesis, must be one of "two.sided" (default), "greater" or "less".}
   \item{conf.level}{confidence level of the returned confidence interval.} 
+  \item{coverage}{coverage probability of the confidence interval.}
+  \item{nrep}{number of replays to calculate the estimated coverage probabilities} 
 }
 \details{
 Counts of successes must be nonnegative and hence not greater than the corresponding numbers of trials which must be positive. All finite counts should be integers. 
@@ -24,7 +26,10 @@ When \code{k=1}, automatically \code{a=1} and the main function will assign \cod
 
 
 If \code{alternative} is \code{NULL}, the main function will automatically assign \code{alternative="two.sided"}.
+
 If \code{conf.level} is \code{NULL}, the main function will automatically assign \code{conf.level=0.95}.
+
+If \code{coverage} is \code{NULL} or \code{FALSE}, the main function does not calculate the estimated coverage probabilities. Whereas, if \code{coverage} is \code{TRUE}, the main function calculates the estimated coverage probabilities. In this case, if \code{nrep} is \code{NULL}, the main function will automatically assign \code{nrep=1000}.
 }
 \value{
 Returns a list with the following components:
@@ -32,7 +37,7 @@ Returns a list with the following components:
 \item{estimate }{a vector with the sample proportions x/n.}
 \item{a }{coefficients of the linear combination of proportions.}
 \item{L }{estimated value of the interest parameter. \code{L=difference} for the d case.}
-\item{inference }{confidence intervals (lower limit, upper limit) and p-values of the test (with z-values of statistics.)}
+\item{inference }{confidence intervals (lower limit, upper limit) and p-values of the test (with z-values of statistics). The coverage probabilities are included when the user requests them.}
 \item{alternative }{a character string describing the alternative hypothesis.}
 \item{lambda }{hypothesized true value of the interest parameter.}
 \item{k }{number of samples.}

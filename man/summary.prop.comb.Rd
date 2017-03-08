@@ -2,7 +2,7 @@
 \alias{summary.prop.comb}
 \title{Summary for a prop.comb object}
 \description{
-Provides results for an object of class \code{prop.comb}. It shows the contingency table with observed data, the parameter of interest and its estimated value. It provides confidence intervals (lower limit, upper limit) and p-values of the test (with z-values of statistics) for methods mentioned in references. It also indicates the alternative hypothesis and the recommendation about the optimal method for that particular case.
+Provides results for an object of class \code{prop.comb}. It shows the contingency table with observed data, the parameter of interest and its estimated value. It provides confidence intervals (lower limit, upper limit) and p-values of the test (with z-values of statistics) for methods mentioned in references. It allows to calculate coverage probabilities for each method. It also indicates the alternative hypothesis and the recommendation about the optimal method for that particular case.
 }
 
 \usage{

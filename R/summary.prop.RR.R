@@ -16,13 +16,13 @@ cat("x: number of successes", "\n")
 cat("n: number of trials", "\n")
 cat("prop: proportion sample estimates", "\n")
 cat("","\n")
-print(P)
+print(round(P,4))
 
 cat("","\n")
 
 
 cat("realtive risk: RR=p2/p1","\n")
-cat("estimated RR:",object$RR, "\n")
+cat("estimated RR:",round(object$RR,4), "\n")
 
 cat("","\n")
 
@@ -34,8 +34,12 @@ borrar = switch(object$alternative,
 cat("alternative hypothesis: true relative risk R", borrar, object$rho, "\n")
 cat("","\n")
 cat("               ",round(100*object$conf.level),"percent confidence interval", "\n")
-print(object$inference)
+print(round(object$inference,4))
 cat("","\n")
 cat("Recommendation:","\n")
-cat( object$recomen,"\n")
+cat(object$recommendation,"\n")
+# cat("Power:","\n")
+# print(object$power)
+
 }
+

@@ -13,7 +13,7 @@ if (object$k==1) {
 
 cat("sample estimates", "\n")
 cat("p","\n")
-cat(object$estimate,"\n")
+cat(round(object$estimate,4),"\n")
 cat("","\n")
 
 borrar = switch(object$alternative, 
@@ -24,7 +24,7 @@ borrar = switch(object$alternative,
 cat("alternative hypothesis: true probability of success", borrar, object$p, "\n")
 cat("               ",round(100*object$conf.level),"percent confidence interval", "\n")
 
-print(object$inference[-6,])
+print(round(object$inference[-6,],4))
 
 
 
@@ -47,13 +47,12 @@ cat("x: number of successes", "\n")
 cat("n: number of trials", "\n")
 cat("prop: proportion sample estimates", "\n")
 cat("","\n")
-print(P)
+print(round(P,4))
 
 cat("","\n")
 
-
 cat("difference of proportions: D=p2-p1","\n")
-cat("estimated D:",object$difference, "\n")
+cat("estimated D:",round(object$difference,4), "\n")
 
 cat("","\n")
 
@@ -64,7 +63,7 @@ borrar = switch(object$alternative,
 
 cat("alternative hypothesis: true difference D", borrar, object$p, "\n")
 cat("               ",round(100*object$conf.level),"percent confidence interval", "\n")
-print(object$inference)
+print(round(object$inference,4))
 
 
 }
@@ -92,19 +91,19 @@ cat("n: number of trials", "\n")
 cat("beta: coefficients of the combination", "\n")
 cat("prop: proportion sample estimates", "\n")
 cat("","\n")
-print(P)
+print(round(P,4))
 
 cat("","\n")
 
 
-L=paste(object$a[1],"*p1",sep="")
+L=paste(round(object$a[1],4),"*p1",sep="")
 for (i in 2:object$k) {
-if (object$a[i]>=0) {L=paste(L,"+",object$a[i],"*p",i,sep="")} else 
-{L=paste(L,object$a[i],"*p",i,sep="")}
+if (object$a[i]>=0) {L=paste(L,"+",round(object$a[i],4),"*p",i,sep="")} else 
+{L=paste(L,round(object$a[i],4),"*p",i,sep="")}
 }
 
 cat("combination of interest: L=",L, "\n")
-cat("estimated L:",object$L, "\n")
+cat("estimated L:",round(object$L,4), "\n")
 
 cat("","\n")
 
@@ -115,11 +114,14 @@ borrar = switch(object$alternative,
 
 cat("alternative hypothesis: true combination L", borrar, object$p, "\n")
 cat("               ",round(100*object$conf.level),"percent confidence interval", "\n")
-print(object$inference)
+print(round(object$inference,4))
 
 }
 
 cat("","\n")
 cat("Recommendation:","\n")
-cat( object$recomen,"\n")
+cat( object$recommendation,"\n")
+
+#cat("Power:","\n")
+#print(object$power)
 }
